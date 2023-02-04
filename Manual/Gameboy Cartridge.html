@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <title>Gameboy Cartridge — Keep Talking and Nobody Explodes Module</title>
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/ktane-utils.js"></script>
+    <style>
+        .dark table, table {
+            margin: 1em auto;
+            border: none;
+            text-align: center;
+        }
+
+        .left { text-align: left; }
+        
+        svg { width: 100%; }
+        .full-width { width: 100%; }
+        .dark svg tspan.inv { fill: #DDD; }
+        
+        .page-footer::before { content: 'Page '; }
+        .page-footer::after { content: ' of 2'; }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="page page-bg-01">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Gameboy Cartridge</span>
+            </div>
+            <div class="page-content">
+                <img src="img/Component/Gameboy Cartridge.svg" class="diagram">
+                <h2>On the Subject of Gameboy Cartridge</h2>
+                <p class="flavour-text">CE ED 66 66 CC 0D 00 0B 03 73 00 83 00 0C 00 0D<br>00 08 11 1F 88 89 00 0E DC CC 6E E6 DD DD D9 99<br>BB BB 67 63 6E 0E EC CC DD DC 99 9F BB B9 33 3E</p>
+                <p>The module holds a gameboy cart strapped to the back plate with a READ and VCC panel wired into it. There's also a label at the bottom marking each pin on the cart. All 13 pins can be interacted with.</p>
+                <p>Using the cartridge pins, set each address' data to the requested values and submit.</p>
+
+                <p>The cartridge's label will have the following code:</p>
+                <table>
+                    <tr>
+                        <td>-</td><td>2</td><td>3</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">DMG - AYYY - ZZZ</td>
+                    </tr>
+                </table>
+                <p>Ignore the first part. The second part is the base code for the addresses, each stored in a single hex value (ignore the leading "A"). Convert these to binary. <b><u>Each bit refers to the data bits; left to right, 0 to 3.</u></b></p>
+                <p>The last part is unconventional hex using letters instead of letters/numbers. Use the "G Hex" table on page 2 to get proper hex. These are your "modifier codes". You'll need to Convert these to binary as well.</p>
+                
+                <p>In addition, The cartridge sticker will determine the order the addresses are stored in the cartridge code:</p>
+                <table>
+                    <tr>
+                        <td>Keep Talking</td>
+                        <td>1-2-3</td>
+                        <td rowspan="6" style="border-style: none none none solid">--Remember--<br>the base code is shuffled around based on<br>the cartridge sticker, but the modifier<br>codes aren't (Always 1-2-3)<br><br><b><u>Make sure you XOR the right base code</u></b><br><b><u>with the right modifier code</u></b></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Eggman's Empire Sim</td>
+                        <td>3-2-1</td>
+                    </tr>
+                    <tr>
+                        <td>Blan's Bananas 2</td>
+                        <td>2-1-3</td>
+                    </tr>
+                    <tr>
+                        <td>Hentai / Censored</td>
+                        <td>3-1-2</td>
+                    </tr>
+                    <tr>
+                        <td>Bamboo Defender</td>
+                        <td>1-3-2</td>
+                    </tr>
+                    <tr>
+                        <td>Pocket Dwarf</td>
+                        <td>2-3-1</td>
+                    </tr>
+                </table>
+                <p>Once you have your codes, XOR them together to get 3 final codes, then use the Technician's Guide on page 2 to enter the data.</p>
+            </div>
+            <div class="page-footer relative-footer">1</div>
+        </div>
+
+        <div class="page page-bg-01">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Gameboy Cartridge</span>
+            </div>
+            <div class="page-content">
+                <h2>DMG Cartridge Technician's Guide</h2>
+                <table>
+                    <tr>
+                        <td class="left" rowspan="14" style="border-style: none none none none">
+                            <b><u>Always power the VCC pin first</u></b><br>
+                            <br>
+                            To <u>WRITE</u> the values of an address:<br>
+                            1 - /WR<br>
+                            2 - The address to change<br>
+                            3 - Any of the data pins<br>
+                            <br>
+                            To <u>READ</u> an address:<br>
+                            1 - /RD<br>
+                            2 - The address to read<br>
+                            <br>
+                            To <u>RESET</u> an address:<br>
+                            1 - /RESET<br>
+                            2 - The address to reset<br>
+                            <br>
+                            To HARD RESET all addresses back to 0, discharge the GND pin while powered to power off the cart<br>
+                            <br>
+                            To submit the data, power the /CS pin
+                        </td>
+                        <td colspan="2" style="border-style: none none solid none">--PINOUT--</td></tr>
+                    <tr><td>01</td><td>VCC</td></tr>
+                    <tr><td>02</td><td>/RESET</td></tr>
+                    <tr><td>03</td><td>/WR</td></tr>
+                    <tr><td>04</td><td>A0</td></tr>
+                    <tr><td>05</td><td>A1</td></tr>
+                    <tr><td>06</td><td>A2</td></tr>
+                    <tr><td>07</td><td>/CS</td></tr>
+                    <tr><td>08</td><td>D0</td></tr>
+                    <tr><td>09</td><td>D1</td></tr>
+                    <tr><td>0A</td><td>D2</td></tr>
+                    <tr><td>0B</td><td>D3</td></tr>
+                    <tr><td>0C</td><td>/RD</td></tr>
+                    <tr><td>0D</td><td>GND</td></tr>
+                </table>
+                <p>The <u>WRITE</u>, <u>READ</u>, and <u>RESET</u> modes will stay in affect after switching, so you can select as many address/data pins as you want. <u>/CS</u> will also reset the mode.</p>
+                
+                <table>
+                    <tr><td colspan="16" style="border-style: none none solid none">G-HEX to HEX</td></tr>
+                    <tr>
+                        <td style="border-style: solid dotted solid solid">G<br>0</td>
+                        <td style="border-style: solid dotted solid dotted">H<br>1</td>
+                        <td style="border-style: solid dotted solid dotted">I<br>2</td>
+                        <td style="border-style: solid dotted solid dotted">J<br>3</td>
+                        <td style="border-style: solid dotted solid dotted">K<br>4</td>
+                        <td style="border-style: solid dotted solid dotted">L<br>5</td>
+                        <td style="border-style: solid dotted solid dotted">M<br>6</td>
+                        <td style="border-style: solid dotted solid dotted">N<br>7</td>
+                        <td style="border-style: solid dotted solid dotted">O<br>8</td>
+                        <td style="border-style: solid dotted solid dotted">P<br>9</td>
+                        <td style="border-style: solid dotted solid dotted">Q<br>A</td>
+                        <td style="border-style: solid dotted solid dotted">R<br>B</td>
+                        <td style="border-style: solid dotted solid dotted">S<br>C</td>
+                        <td style="border-style: solid dotted solid dotted">T<br>D</td>
+                        <td style="border-style: solid dotted solid dotted">U<br>E</td>
+                        <td style="border-style: solid solid solid dotted">V<br>F</td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr><td colspan="2" style="border-style: none none solid none">XOR</td></tr>
+                    <tr>
+                        <td>1/1 or 0/0 == 0</td>
+                        <td>1/0 or 0/1 == 1</td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr><td colspan="3" style="border-style: none none solid none">Address Setup</td></tr>
+                    <tr>
+                        <td style="border-style: solid solid dotted solid">A0</td>
+                        <td style="border-style: solid solid dotted solid">A1</td>
+                        <td style="border-style: solid solid dotted solid">A2</td>
+                    </tr>
+                    <tr>
+                        <td style="border-style: dotted solid none solid">D0</td>
+                        <td style="border-style: dotted solid none solid">D0</td>
+                        <td style="border-style: dotted solid none solid">D0</td>
+                    </tr>
+                    <tr>
+                        <td style="border-style: none solid none solid">D1</td>
+                        <td style="border-style: none solid none solid">D1</td>
+                        <td style="border-style: none solid none solid">D1</td>
+                    </tr>
+                    <tr>
+                        <td style="border-style: none solid none solid">D2</td>
+                        <td style="border-style: none solid none solid">D2</td>
+                        <td style="border-style: none solid none solid">D2</td>
+                    </tr>
+                    <tr>
+                        <td style="border-style: none solid solid solid">D3</td>
+                        <td style="border-style: none solid solid solid">D3</td>
+                        <td style="border-style: none solid solid solid">D3</td>
+                    </tr>
+                </table>
+            
+            </div>
+            <div class="page-footer relative-footer">2</div>
+        </div>
+    </div>
+</body>
+</html>

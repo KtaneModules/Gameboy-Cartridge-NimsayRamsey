@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
+  m_Name: ModConfig
+  m_EditorClassIdentifier: 
+  id: gameboyCart
+  title: Gameboy Cartridge
+  author: Nimsay Ramsey
+  description: "Poor cartridge was gutted and used on a bomb. Do they even know how
+    rare that game is?\r\n\r\nMade for the 2023 Grape Mod Jam\r\n\r\nHTML: Coming
+    Soon\r\nPDF: Coming Soon\r\nModule ID: gameboyCart\r\n\r\nManual SVG: GamingWithJanko\n\n\"Gameboy
+    Cartridge\" (https://skfb.ly/ozoFE) by RedMatthewRouse is licensed under Creative
+    Commons Attribution (http://creativecommons.org/licenses/by/4.0/)."
+  version: 1
+  outputFolder: build
+  previewImage: {fileID: 2800000, guid: 2848519625da0194d9fee4fde592e096, type: 3}
