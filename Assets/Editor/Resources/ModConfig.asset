@@ -15,10 +15,10 @@ MonoBehaviour:
   title: Gameboy Cartridge
   author: Nimsay Ramsey
   description: "Poor cartridge was gutted and used on a bomb. Do they even know how
-    rare that game is?\r\n\r\nMade for the 2023 Grape Mod Jam\r\n\r\nHTML: Coming
-    Soon\r\nPDF: Coming Soon\r\nModule ID: gameboyCart\r\n\r\nManual SVG: GamingWithJanko\n\n\"Gameboy
-    Cartridge\" (https://skfb.ly/ozoFE) by RedMatthewRouse is licensed under Creative
-    Commons Attribution (http://creativecommons.org/licenses/by/4.0/)."
+    rare that game is?\r\n\r\nMade for the 2023 Grape Mod Jam\r\n\r\nHTML: https://ktane.timwi.de/HTML/Gameboy%20Cartridge.html\nPDF:
+    https://ktane.timwi.de/PDF/Gameboy%20Cartridge.pdf\nModule ID: gameboyCart\r\n\r\nManual
+    SVG: GamingWithJanko\n\n\"Gameboy Cartridge\" (https://skfb.ly/ozoFE) by RedMatthewRouse
+    is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/)."
   version: 1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 2848519625da0194d9fee4fde592e096, type: 3}

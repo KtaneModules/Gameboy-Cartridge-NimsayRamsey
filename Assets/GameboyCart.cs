@@ -98,7 +98,7 @@ public class GameboyCart : MonoBehaviour {
 
 	void Start () {
 		InitSolution();
-		Debug.Log("Hiding Solution");
+		//Debug.Log("Hiding Solution");
 	}
 	
 	void InitSolution () {
@@ -113,26 +113,27 @@ public class GameboyCart : MonoBehaviour {
 			regionTagVal[i] = UnityEngine.Random.Range(0, 2);
 			if (i % 4 == 3) { regionTag += regionHex[(regionTagVal[i-3] * 8) + (regionTagVal[i-2] * 4) + (regionTagVal[i-1] * 2) + (regionTagVal[i])]; }
 		}
-		Debug.LogFormat("[Gameboy Cartridge #{0}] Region string is {1}. Modifier codes are [{2}{3}{4}{5}] [{6}{7}{8}{9}] [{10}{11}{12}{13}]" , moduleId, regionTag, regionTagVal[0], regionTagVal[1], regionTagVal[2], regionTagVal[3], regionTagVal[4], regionTagVal[5], regionTagVal[6], regionTagVal[7], regionTagVal[8], regionTagVal[9], regionTagVal[10], regionTagVal[11]);
 
-		//if (debugMode) { }
-
-		int[] gameTagVal = new int[] {0, 0, 0, 0};
+		int[] gameTagVal = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int[] solveTagVal = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		for (int a = 0; a < 3; a++) {
 			int row = stickerShuffles[sticker, a];
 			//Debug.Log("Row " + row);
 			for (int d = 0; d < 4; d++) {
 				if (!debugMode) {
-					if (UnityEngine.Random.Range(0, 2) == 1) { solutionStates[row, d] = true; gameTagVal[d] = 1; } else { solutionStates[row, d] = false; gameTagVal[d] = 0; }
-				} else if (solutionStates[row, d]) { gameTagVal[d] = 1; } else { gameTagVal[d] = 0; }
-				//Debug.Log(regionTagVal[a * 4 + d] + " // " + solutionStates[a, d]);
-				//Debug.Log(regionTagVal[row * 4 + d]);
+					if (UnityEngine.Random.Range(0, 2) == 1) { solutionStates[row, d] = true; gameTagVal[a*4+d] = 1; } else { solutionStates[row, d] = false; gameTagVal[a*4+d] = 0; }
+				} else if (solutionStates[row, d]) { gameTagVal[a*4+d] = 1; } else { gameTagVal[a*4+d] = 0; }
 				//Debug.Log(solutionStates[row, d]);
-				if (regionTagVal[row * 4 + d] == 1) { solutionStates[row, d] = !solutionStates[row, d]; }
+				if (regionTagVal[row * 4 + d] + gameTagVal[a*4+d] == 1) { solutionStates[row, d] = true; solveTagVal[row*4+d] = 1; } else { solutionStates[row, d] = false; solveTagVal[row*4+d] = 0; }
 			}
-			gameTag += hexChars[(gameTagVal[0] * 8) + (gameTagVal[1] * 4) + (gameTagVal[2] * 2) + (gameTagVal[3])];
-			Debug.LogFormat("[Gameboy Cartridge #{0}] Requesting A{1} -- [D0/{2}] [D1/{3}] [D2/{4}] [D3/{5}]", moduleId, row, solutionStates[row, 0], solutionStates[row, 1], solutionStates[row, 2], solutionStates[row, 3]);
+			gameTag += hexChars[(gameTagVal[a*4] * 8) + (gameTagVal[a*4+1] * 4) + (gameTagVal[a*4+2] * 2) + (gameTagVal[a*4+3])];
+			//Debug.LogFormat("[Gameboy Cartridge #{0}] Base A{1} is {2} -- [{3}{4}{5}{6}]", moduleId, row, hexChars[(gameTagVal[0] * 8) + (gameTagVal[1] * 4) + (gameTagVal[2] * 2) + (gameTagVal[3])], gameTagVal[0], gameTagVal[1], gameTagVal[2], gameTagVal[3]);
+			//Debug.LogFormat("[Gameboy Cartridge #{0}] Correct A{1} -- [{2}{3}{4}{5}]", moduleId, row, solveTagVal[0], solveTagVal[1], solveTagVal[2], solveTagVal[3]);
 		}
+		//Debug.LogFormat("[Gameboy Cartridge #{0}] Full Base string is {1}", moduleId, );
+		Debug.LogFormat("[Gameboy Cartridge #{0}] Game string is {1}. Base codes are [{2}{3}{4}{5}] [{6}{7}{8}{9}] [{10}{11}{12}{13}]" , moduleId, gameTag.Substring(1), gameTagVal[0], gameTagVal[1], gameTagVal[2], gameTagVal[3], gameTagVal[4], gameTagVal[5], gameTagVal[6], gameTagVal[7], gameTagVal[8], gameTagVal[9], gameTagVal[10], gameTagVal[11]);
+		Debug.LogFormat("[Gameboy Cartridge #{0}] Region string is {1}. Modifier codes are [{2}{3}{4}{5}] [{6}{7}{8}{9}] [{10}{11}{12}{13}]" , moduleId, regionTag, regionTagVal[0], regionTagVal[1], regionTagVal[2], regionTagVal[3], regionTagVal[4], regionTagVal[5], regionTagVal[6], regionTagVal[7], regionTagVal[8], regionTagVal[9], regionTagVal[10], regionTagVal[11]);
+		Debug.LogFormat("[Gameboy Cartridge #{0}] Solution codes are [{1}{2}{3}{4}] [{5}{6}{7}{8}] [{9}{10}{11}{12}]" , moduleId, solveTagVal[0], solveTagVal[1], solveTagVal[2], solveTagVal[3], solveTagVal[4], solveTagVal[5], solveTagVal[6], solveTagVal[7], solveTagVal[8], solveTagVal[9], solveTagVal[10], solveTagVal[11]);
 		stickerMesh.material = stickerTypes[sticker];
 		stickerLabel.text = "DMG - " + gameTag + " - " + regionTag; //regions[regionCode]
 		return;
@@ -143,16 +144,16 @@ public class GameboyCart : MonoBehaviour {
 		int pinNum = Array.IndexOf(boardPins, Pin);
 		//Debug.LogFormat("[Gameboy Cartridge #{0}] Pin {1} Pressed", moduleId, pinNum + 1);
 		if (pinNum == 0 && !powered) { powered = true; powerLight.material = lightMats[1]; Debug.LogFormat("[Gameboy Cartridge #{0}] Powered ON", moduleId); } else if (!powered) { return; }
-		if (pinNum == 1) { IdleState(); reset = true; Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to RESET", moduleId); }
-		if (pinNum == 2) { IdleState(); write = true; Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to WRITE", moduleId); }
+		if (pinNum == 1) { IdleState(); reset = true; } //Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to RESET", moduleId);
+		if (pinNum == 2) { IdleState(); write = true; } //Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to WRITE", moduleId);
 		if (pinNum == 6) { IdleState(); CheckSolve(); }
-		if (pinNum == 11) { IdleState(); read = true; Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to READ", moduleId); }
+		if (pinNum == 11) { IdleState(); read = true; } //Debug.LogFormat("[Gameboy Cartridge #{0}] Switched to READ", moduleId);
 		if (pinNum == 12 && powered) { PowerOff(); }
 
 		if (addressPins.Contains(pinNum)) {
 			address = pinNum - 3;
 			if (reset) {
-				Debug.LogFormat("[Gameboy Cartridge #{0}] Resetting Address {1}", moduleId, address);
+				Debug.LogFormat("[Gameboy Cartridge #{0}] Resetting Address {1} to [0000]", moduleId, address);
 				for (int d = 0; d < 4; d++) { addressStates[address, d] = false; }
 				return;
 			} else if (read) {
@@ -163,7 +164,7 @@ public class GameboyCart : MonoBehaviour {
 					//Debug.Log(addressStates[address, d]);
 				}
 			}
-			Debug.LogFormat("[Gameboy Cartridge #{0}] Selected Address {1}", moduleId, address);
+			//Debug.LogFormat("[Gameboy Cartridge #{0}] Selected Address {1}", moduleId, address);
 		}
 
 		if (dataPins.Contains(pinNum)) {
@@ -185,7 +186,7 @@ public class GameboyCart : MonoBehaviour {
 	}
 
 	void PowerOff () {
-		Debug.LogFormat("[Gameboy Cartridge #{0}] Powered OFF", moduleId);
+		Debug.LogFormat("[Gameboy Cartridge #{0}] Powered OFF. Resetting all values to [0]", moduleId);
 		addressStates = new bool[,] {
 			{false, false, false, false}, // A0
 			{false, false, false, false}, // A1
@@ -200,14 +201,22 @@ public class GameboyCart : MonoBehaviour {
 
 	void CheckSolve () {
 		if (Solved) { return; }
+		bool wrong = false;
+		int[] logReturn = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		for (int a = 0; a < 3; a++) {
 			for (int d = 0; d < 4; d++) {
-				if (addressStates[a, d] != solutionStates[a, d]) {
-					Debug.LogFormat("[Gameboy Cartridge #{0}] A{1} D{2} was incorrect. Read {3}. Should be {4}", moduleId, a, d, addressStates[a, d], solutionStates[a, d]);
-					Module.HandleStrike();
-					return;
+				if (addressStates[a, d]) { logReturn[a*4+d] = 1; } else { logReturn[a*4+d] = 0; }
+				//Debug.Log(addressStates[a, d] + " // " + solutionStates[a, d]);
+				if (!wrong && addressStates[a, d] != solutionStates[a, d]) {
+					wrong = true;
 				}
 			}
+		}
+		Debug.LogFormat("[Gameboy Cartridge #{0}] Submitting A0 [{1}{2}{3}{4}] A1 [{5}{6}{7}{8}] A2 [{9}{10}{11}{12}]" , moduleId, logReturn[0], logReturn[1], logReturn[2], logReturn[3], logReturn[4], logReturn[5], logReturn[6], logReturn[7], logReturn[8], logReturn[9], logReturn[10], logReturn[11]);
+		if (wrong) {
+			Debug.LogFormat("[Gameboy Cartridge #{0}] Submitted data was incorrect", moduleId);
+			Module.HandleStrike();
+			return;
 		}
 		Debug.LogFormat("[Gameboy Cartridge #{0}] Data accepted", moduleId);
 		Solved = true;
